@@ -1,0 +1,104 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: users
+    // Document ID: {userId}
+    // Fields:
+    //   - uid: string (required)
+    //   - email: string (required)
+    //   - displayName: string
+    //   - photoURL: string
+    //   - createdAt: timestamp
+    //
+    // Collection: notes
+    // Document ID: {noteId}
+    // Fields:
+    //   - userId: string (required)
+    //   - topic: string (required)
+    //   - content: string (required)
+    //   - language: string
+    //   - createdAt: timestamp
+    //
+    // Collection: quizzes
+    // Document ID: {quizId}
+    // Fields:
+    //   - userId: string (required)
+    //   - topic: string (required)
+    //   - questions: list (required)
+    //   - createdAt: timestamp
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isDocOwner() {
+      return isAuthenticated() && request.auth.uid == resource.data.userId;
+    }
+
+    function isValidUser(data) {
+      return data.keys().hasAll(['uid', 'email']) &&
+             data.uid is string && data.uid.size() < 128 &&
+             data.email is string && data.email.size() < 256 &&
+             data.email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$") &&
+             (!('displayName' in data) || (data.displayName is string && data.displayName.size() < 100));
+    }
+
+    function isValidNote(data) {
+      return data.keys().hasAll(['userId', 'topic', 'content']) &&
+             data.userId == request.auth.uid &&
+             data.topic is string && data.topic.size() > 0 && data.topic.size() < 200 &&
+             data.content is string && data.content.size() > 0 && data.content.size() < 50000 &&
+             (!('language' in data) || (data.language is string && data.language.size() < 50));
+    }
+
+    function isValidQuiz(data) {
+      return data.keys().hasAll(['userId', 'topic', 'questions']) &&
+             data.userId == request.auth.uid &&
+             data.topic is string && data.topic.size() > 0 && data.topic.size() < 200 &&
+             data.questions is list && data.questions.size() > 0 && data.questions.size() <= 20;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+          (request.auth.token.email == "rjapu838121@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if isOwner(userId) && isValidUser(request.resource.data);
+      allow update: if isOwner(userId) && isValidUser(request.resource.data) && request.resource.data.uid == resource.data.uid;
+    }
+
+    match /notes/{noteId} {
+      allow read: if isDocOwner() || isAdmin();
+      allow create: if isAuthenticated() && isValidNote(request.resource.data);
+      allow update: if isDocOwner() && isValidNote(request.resource.data) && request.resource.data.userId == resource.data.userId;
+      allow delete: if isDocOwner();
+    }
+
+    match /quizzes/{quizId} {
+      allow read: if isDocOwner() || isAdmin();
+      allow create: if isAuthenticated() && isValidQuiz(request.resource.data);
+      allow update: if isDocOwner() && isValidQuiz(request.resource.data) && request.resource.data.userId == resource.data.userId;
+      allow delete: if isDocOwner();
+    }
+  }
+}
