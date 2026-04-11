@@ -1,20 +1,93 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+🚀 Lumina Learn AI
 
-# Run and deploy your AI Studio app
+An AI-powered study assistant that helps students generate notes, quizzes, and answers instantly using Google Gemini AI.
 
-This contains everything you need to run your app locally.
+---
 
-View your app in AI Studio: https://ai.studio/apps/748b4f8a-053d-4909-bf80-94f7c8806f14
+🌍 Overview
 
-## Run Locally
+Lumina Learn AI is designed to make learning faster, smarter, and more efficient. Users can enter any topic and instantly get structured notes and quizzes powered by AI.
 
-**Prerequisites:**  Node.js
+---
 
+✨ Features
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+- 🧠 AI Chat (Instant Answers)
+- 📝 Smart Notes Generator
+- ❓ Quiz Generator (MCQ)
+- 🌐 Bangla + English Support
+- ☁️ Firebase Integration
+
+---
+
+⚙️ How It Works
+
+1. Enter a topic
+2. Click "Generate"
+3. AI processes the request
+4. Notes and quizzes are generated instantly
+
+---
+
+🛠️ Tech Stack
+
+- HTML, CSS, JavaScript
+- Google Gemini API
+- Firebase
+
+---
+
+🔒 Security
+
+- Secure API key handling
+- Input validation
+- Safe data management
+
+---
+
+📸 Preview
+
+(Add your app screenshot here)
+
+---
+
+🔗 Live Demo
+
+(Add your live demo link)
+
+---
+
+🎬 Demo Video
+
+https://youtube.com/shorts/TfE9AQmRQEg
+
+---
+
+📁 GitHub Repository
+
+https://github.com/mrcodexter/Lumina-Learn-Ai
+
+---
+
+🎯 Use Cases
+
+- Exam preparation
+- Quick revision
+- Self-learning
+- Practice tests
+
+---
+
+🌟 Unique Value
+
+- AI + Education combined
+- Supports Bangla language
+- Fast and user-friendly
+
+---
+
+📌 Conclusion
+
+Lumina Learn AI is a real-world AI learning tool that transforms traditional education into a smart and interactive experience.
+
+---
