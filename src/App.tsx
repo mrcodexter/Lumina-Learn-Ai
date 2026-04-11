@@ -50,6 +50,7 @@ export default function App() {
   const [itemToDelete, setItemToDelete] = useState<{ id: string, type: 'note' | 'quiz' } | null>(null);
   const [editingNote, setEditingNote] = useState<StudyNote | null>(null);
   const [viewingNote, setViewingNote] = useState<StudyNote | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     if (typeof window !== 'undefined') {
       return (localStorage.getItem('theme') as 'light' | 'dark') || 'light';
@@ -230,6 +231,15 @@ export default function App() {
       alert('Failed to update note. Please try again.');
     }
   };
+
+  const filteredNotes = notes.filter(note => 
+    note.topic.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    note.content.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const filteredQuizzes = quizzes.filter(quiz => 
+    quiz.topic.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   if (loading) {
     return (
@@ -433,21 +443,32 @@ export default function App() {
             </TabsContent>
 
             <TabsContent key="tab-notes" value="notes" className="mt-0">
+              <div className="mb-6 relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                <Input 
+                  placeholder="Search your notes by topic or content..." 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 h-12 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 dark:text-slate-100 focus:ring-indigo-500"
+                />
+              </div>
               <motion.div
                 key="motion-notes"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
               >
-                {notes.length === 0 ? (
+                {filteredNotes.length === 0 ? (
                   <div className="col-span-full py-20 text-center space-y-4">
                     <div className="bg-slate-100 dark:bg-slate-900 w-16 h-16 rounded-full flex items-center justify-center mx-auto text-slate-400 dark:text-slate-600">
                       <BookOpen size={32} />
                     </div>
-                    <p className="text-slate-500 dark:text-slate-400">No notes generated yet. Start by searching for a topic!</p>
+                    <p className="text-slate-500 dark:text-slate-400">
+                      {searchQuery ? `No notes found matching "${searchQuery}"` : "No notes generated yet. Start by searching for a topic!"}
+                    </p>
                   </div>
                 ) : (
-                  notes.map((note) => (
+                  filteredNotes.map((note) => (
                     <Card key={`note-${note.id}`} className="group hover:shadow-md transition-all border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col bg-white dark:bg-slate-900">
                       <CardHeader className="bg-slate-50/50 dark:bg-slate-950/50 border-b border-slate-100 dark:border-slate-800">
                         <div className="flex justify-between items-start">
@@ -501,21 +522,32 @@ export default function App() {
             </TabsContent>
 
             <TabsContent key="tab-quizzes" value="quizzes" className="mt-0">
+              <div className="mb-6 relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                <Input 
+                  placeholder="Search your quizzes by topic..." 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 h-12 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 dark:text-slate-100 focus:ring-indigo-500"
+                />
+              </div>
               <motion.div
                 key="motion-quizzes"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
               >
-                {quizzes.length === 0 ? (
+                {filteredQuizzes.length === 0 ? (
                   <div className="col-span-full py-20 text-center space-y-4">
                     <div className="bg-slate-100 dark:bg-slate-900 w-16 h-16 rounded-full flex items-center justify-center mx-auto text-slate-400 dark:text-slate-600">
                       <BrainCircuit size={32} />
                     </div>
-                    <p className="text-slate-500 dark:text-slate-400">No quizzes generated yet. Start by searching for a topic!</p>
+                    <p className="text-slate-500 dark:text-slate-400">
+                      {searchQuery ? `No quizzes found matching "${searchQuery}"` : "No quizzes generated yet. Start by searching for a topic!"}
+                    </p>
                   </div>
                 ) : (
-                  quizzes.map((quiz) => (
+                  filteredQuizzes.map((quiz) => (
                     <Card key={`quiz-${quiz.id}`} className="group hover:shadow-md transition-all border-slate-200 dark:border-slate-800 flex flex-col bg-white dark:bg-slate-900">
                       <CardHeader>
                         <div className="flex justify-between items-start">

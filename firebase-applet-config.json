@@ -1,1 +1,10 @@
-{\n  "databaseURL": "${FIREBASE_DATABASE_URL}",\n  "apiKey": "${FIREBASE_API_KEY}",\n  "authDomain": "${FIREBASE_AUTH_DOMAIN}",\n  "projectId": "${FIREBASE_PROJECT_ID}",\n  "storageBucket": "${FIREBASE_STORAGE_BUCKET}",\n  "messagingSenderId": "${FIREBASE_MESSAGING_SENDER_ID}",\n  "appId": "${FIREBASE_APP_ID}",\n  "measurementId": "${FIREBASE_MEASUREMENT_ID}",\n  "securityRules": {\n    ".read": "auth != null",\n    ".write": "auth != null"\n  }\n}
+{
+  "projectId": "gen-lang-client-0189413578",
+  "appId": "1:1093562343719:web:e36c95e02ec67621f24902",
+  "apiKey": "AIzaSyDct9u7u3xkgINrb6er1v7IOr9rtyma-3M",
+  "authDomain": "gen-lang-client-0189413578.firebaseapp.com",
+  "firestoreDatabaseId": "ai-studio-748b4f8a-053d-4909-bf80-94f7c8806f14",
+  "storageBucket": "gen-lang-client-0189413578.firebasestorage.app",
+  "messagingSenderId": "1093562343719",
+  "measurementId": ""
+}
